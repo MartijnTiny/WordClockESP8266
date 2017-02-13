@@ -1,0 +1,254 @@
+<html>
+<head>
+<script>
+var connection = new WebSocket('ws://'+location.hostname+':81/', ['arduino']);
+var currenttime = new Date();
+var first = 0;
+var RGB = 0;
+var Mod = 0;
+connection.onopen = function(){
+    connection.send('Connect ' + new Date()); 
+};
+
+connection.onerror = function(error){
+    console.log('WebSocket Error ', error);
+};
+
+connection.onmessage = function(e){
+    first = 1;
+    console.log('Server: ', e.data);
+    if(e.data.startsWith('Time:'))
+    {
+      currenttime = e.data.substring(5);
+      document.getElementById("currenttimeID").value = currenttime;
+    }
+    if(e.data.startsWith('Mod:'))
+    {
+      Mod = e.data.substring(4);
+      //document.getElementById("currenttimeID").value = currenttime;
+    }
+    if(e.data.startsWith('RGB:'))
+    {
+      RGB = e.data.substring(4);
+      document.getElementById('r').value = RGB.substring(0,2);
+      document.getElementById('g').value = RGB.substring(2,4);
+      document.getElementById('b').value = RGB.substring(4,6);
+    }
+    document.getElementById("loading").style.display = "none" 
+};
+
+
+
+function sendRGB(){
+    var r = parseInt(document.getElementById('r').value).toString(16);
+    var g = parseInt(document.getElementById('g').value).toString(16);
+    var b = parseInt(document.getElementById('b').value).toString(16);
+    
+    if(r.length < 2){
+        r = '0' + r;
+    }   
+    
+    if(g.length < 2){
+        g = '0' + g;
+    }   
+    
+    if(b.length < 2){
+        b = '0' + b;
+    }   
+    
+    var rgb = '#'+r+g+b;    
+    console.log('RGB: ' + rgb); 
+    connection.send(rgb);
+}
+function sendBright(){
+    var br = parseInt(document.getElementById('bri').value).toString();
+
+    
+    if(br.length < 2){
+        br = '0' + br;
+    }   
+
+    
+    br = '%'+br;    
+    console.log('brightness: ' + br); 
+    connection.send(br);
+}
+function FormFunc() {
+  var params = '';
+  for( var i=0; i<document.myForm.elements.length; i++ )
+  {
+   var fieldName = document.myForm.elements[i].name;
+   var fieldValue = document.myForm.elements[i].value;
+
+   // use the fields, put them in a array, etc.
+
+   // or, add them to a key-value pair strings, 
+   // as in regular POST
+
+   params += fieldName + '=' + fieldValue + '&';
+  }
+    console.log(params);
+    //document.getElementById("myForm").submit();
+}
+function TimeFormFunc() {
+  var time = document.getElementById('currenttimeID').value;
+  time = 'T:' + time;
+  console.log(time);
+  connection.send(time);
+}
+
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+function ModeFunction(Mode){
+  
+  var sendmode = '=';
+  switch(Mode)
+  {
+    case 1:
+      Mod = 'off';
+      break;
+    case 2:
+      Mod = 'all';
+      break;
+    case 3:
+      Mod = 'wipe';
+      break;
+    case 4:
+      Mod = 'rainbow';
+      break;
+    case 5:
+      Mod = 'rainbowCycle';
+      break;
+    case 6:
+      Mod = 'theaterchase';
+      break;
+    case 7:
+      Mod = 'theaterchaseRainbow';
+      break;
+    case 8:
+      Mod = 'clock';
+      break;
+    case 9:
+      Mod = 'test';
+      break;
+	case 10:
+      Mod = 'heart';
+      break;
+  }
+  
+  sendmode += Mod;
+  connection.send(sendmode);
+}
+</script>
+<style>
+#loading {width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 1000; background-color:#ccc; opacity:0.8;}
+
+#loading-image {position: absolute;top: 40%;left: 45%;z-index: 100} 
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+</style>
+</head>
+<body>
+  <div id="loading">
+<img id="loading-image" src="loading.gif" alt="Loading..." />
+</div>  
+<b>Clock control page:</b><br/>
+<i>Voor de liefste Laurie</i><br/>
+<br/>
+R: <input id="r" type="range" min="0" max="255" step="1" onchange="sendRGB();" /><br/>
+G: <input id="g" type="range" min="0" max="255" step="1" onchange="sendRGB();" /><br/>
+B: <input id="b" type="range" min="0" max="255" step="1" onchange="sendRGB();" /><br/>
+<br/>
+Brightness: <input id="bri" type="range" min="0" max="100" step="1" onchange="sendBright();" /><br/>
+<br/>
+<form id="timeFormId" name="timeForm">
+  Set Time (date and time):
+  <input type="datetime-local" name="currenttime" id="currenttimeID">
+  <input type="button" onclick="TimeFormFunc()" name="TimeSubBtn" value="Submit time">
+</form>
+<div class="dropdown">
+  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href="#" onclick="ModeFunction(1);return false;">Off</a>
+    <a href="#" onclick="ModeFunction(2);return false;">All</a>
+    <a href="#" onclick="ModeFunction(3);return false;">Wipe</a>
+    <a href="#" onclick="ModeFunction(4);return false;">Rainbow</a>
+    <a href="#" onclick="ModeFunction(5);return false;">Rainbow cycle</a>
+    <a href="#" onclick="ModeFunction(6);return false;">Theaterchase</a>
+    <a href="#" onclick="ModeFunction(7);return false;">Theaterchase Rainbow</a>
+    <a href="#" onclick="ModeFunction(8);return false;">Clock</a>
+    <a href="#" onclick="ModeFunction(9);return false;">Fastclock</a>
+	<a href="#" onclick="ModeFunction(10);return false;">heart</a>
+  </div>
+</div>
+<br/>
+<form id="myFormId" name="myForm">
+  Birthday mode: <input type="checkbox" name="birthdaymod"><br>
+  Show Heart:   <input type="checkbox"  name="heart"><br><br>
+  <input type="button" onclick="FormFunc()" name="SubBtn" value="Submit form">
+</form>
+
+</body>
+</html>
