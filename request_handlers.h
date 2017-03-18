@@ -30,10 +30,15 @@ void getArgs() {
   if(server.arg("mode"))
   {
     int temp = server.arg("mode").toInt();
-    if((temp<11)&&(temp>0)){
+    if((temp<11)&&(temp>=0)){
     mode = MODE(temp);}
   }
-
+  if(server.arg("h"))
+  {
+    int temp = server.arg("h").toInt();
+    if((temp<4)&&(temp>=0)){
+    heartmode = HEARTMODE(temp);}
+  }
   if (main_color.red > 255) {
     main_color.red = 255;
   }
@@ -53,7 +58,10 @@ void getArgs() {
   if (main_color.blue < 0) {
     main_color.blue = 0;
   }
-
+ if (server.arg("rain")) {
+  Rainbow_color = server.arg("rain").toInt();
+  
+ }
   if (server.arg("d") == "") {
     if(delay_ms < 20)
     {
@@ -206,6 +214,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
         SendData += mode;
         webSocket.sendTXT(num,SendData); //send mode
 
+        SendData = "HEARTMODE:";
+        SendData += heartmode;
+        webSocket.sendTXT(num,SendData); //send mode
+
+        SendData = "RAINBOWMODE:";
+        SendData += Rainbow_color;
+        webSocket.sendTXT(num,SendData); //send mode
+        
         SendData = "RGB:";
         if(main_color.red<16) SendData += '0';
         SendData += String(main_color.red,HEX);
@@ -308,7 +324,36 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
         mode = ALL;
         webSocket.sendTXT(num, "OK");
       }
-
+      if (payload[0] == 'H') {
+        // we get mode data
+        String str_h_mode = String((char *) &payload[1]);
+        if (str_h_mode.startsWith("=0")) {
+          heartmode = H_OFF;
+        }
+        if (str_h_mode.startsWith("=1")) {
+          heartmode = H_ON;
+        }
+        if (str_h_mode.startsWith("=heartbeat")) {
+          heartmode = H_HEARTBEAT;
+        }
+        if (str_h_mode.startsWith("=rainbow")) {
+          heartmode = H_RAINBOW;
+        }
+        DBG_OUTPUT_PORT.printf("Activated heartmode mode [%u]!\n", heartmode);
+        webSocket.sendTXT(num, "OK");
+      }
+      if (payload[0] == 'R') {
+        // we get mode data
+        String str_r_mode = String((char *) &payload[1]);
+        if (str_r_mode.startsWith("=0")) {
+          Rainbow_color = 0;
+        }
+        if (str_r_mode.startsWith("=1")) {
+          Rainbow_color = 1;
+        }
+        DBG_OUTPUT_PORT.printf("Activated rainbow mode [%u]!\n", Rainbow_color);
+        webSocket.sendTXT(num, "OK");
+      }
       // ! ==> Activate mode
       if (payload[0] == '=') {
         // we get mode data

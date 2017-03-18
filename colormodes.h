@@ -43,13 +43,13 @@ void updateLed (int led, int brightness) {
 
 void clearEdge(void)
 {
-  strip.SetPixelColor(0,0);
-  strip.SetPixelColor(1,0);
-  strip.SetPixelColor(122,0);
-  strip.SetPixelColor(123,0);
-  strip.SetPixelColor(124,0);
-  strip.SetPixelColor(125,0);
-  strip.SetPixelColor(126,0);
+  strip.SetPixelColor(0, 0);
+  strip.SetPixelColor(1, 0);
+  strip.SetPixelColor(122, 0);
+  strip.SetPixelColor(123, 0);
+  strip.SetPixelColor(124, 0);
+  strip.SetPixelColor(125, 0);
+  strip.SetPixelColor(126, 0);
 }
 // Input a value 0 to 255 to get a color value.
 // The colours are a transition r - g - b - back to r.
@@ -68,6 +68,25 @@ RgbColor Wheel(byte WheelPos) {
   }
   WheelPos -= 170;
   RgbColor color = RgbColor(((WheelPos * 3) / 2), ((255 - WheelPos * 3) / 2), 0);
+  // color = colorGamma.Correct(color);
+  return color;
+}
+
+RgbColor RainbowWheel(byte WheelPos) {
+  WheelPos = 255 - WheelPos;
+  if (WheelPos < 85) {
+    RgbColor color = RgbColor(255 - (WheelPos * 3), 0, WheelPos * 3 ); 
+    // color = colorGamma.Correct(color);
+    return color;
+  }
+  if (WheelPos < 170) {
+    WheelPos -= 85;
+    RgbColor color = RgbColor(0, WheelPos * 3 , 255 - (WheelPos * 3));
+    // color = colorGamma.Correct(color);
+    return color;
+  }
+  WheelPos -= 170;
+  RgbColor color = RgbColor(WheelPos * 3 , 255 - (WheelPos * 3) , 0);
   // color = colorGamma.Correct(color);
   return color;
 }
@@ -134,23 +153,38 @@ RgbColor Wheel(byte WheelPos) {
 // Fill the dots one after the other with a color
 void colorWipe(RgbColor c, uint8_t wait) {
   uint16_t i;
+  RgbColor color = RgbColor(0, 0, 0);
   for (i = 0; i < strip.PixelCount(); i++) {
-    RgbColor color = RgbColor(0, 0, 0);
+
     strip.SetPixelColor(i, color);
   }
   strip.Show();
   c = colorGamma.Correct(c);
-  for (uint16_t i = 2; i < strip.PixelCount()-4; i++) {
-    strip.SetPixelColor(i, c);
-    strip.Show();
+  exit_func = false;
+  while (exit_func == false)
+  {
+    for (uint16_t i = 2; i < strip.PixelCount() - 4; i++) {
+      strip.SetPixelColor(i, c);
+      strip.Show();
 
-    checkForRequests();
-    if (exit_func) {
-      exit_func = false;
-      return;
+      checkForRequests();
+      if (exit_func) {
+        exit_func = false;
+        return;
+      }
+      delay(wait);
     }
+    for (uint16_t i = 2; i < strip.PixelCount() - 4; i++) {
+      strip.SetPixelColor(i, color);
+      strip.Show();
 
-    delay(wait);
+      checkForRequests();
+      if (exit_func) {
+        exit_func = false;
+        return;
+      }
+      delay(wait);
+    }
   }
   mode = HOLD;
 }
@@ -159,7 +193,7 @@ void rainbow(uint8_t wait) {
   uint16_t i, j;
   clearEdge();
   for (j = 0; j < 256; j++) {
-    for (i = 2; i < strip.PixelCount()-4; i++) {
+    for (i = 2; i < strip.PixelCount() - 4; i++) {
       strip.SetPixelColor(i, Wheel((i + j) & 255));
     }
     strip.Show();
@@ -177,9 +211,9 @@ void rainbow(uint8_t wait) {
 // Slightly different, this makes the rainbow equally distributed throughout
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
-  
+  clearEdge();
   for (j = 0; j < 256; j++) { // 1 cycle of all colors on wheel
-    for (i = 2; i < strip.PixelCount()-4; i++) {
+    for (i = 2; i < strip.PixelCount() - 4; i++) {
       strip.SetPixelColor(i, Wheel(((i * 256 / strip.PixelCount()) + j) & 255));
     }
     strip.Show();
@@ -199,7 +233,7 @@ void theaterChase(RgbColor c, uint8_t wait) {
   clearEdge();
   c = colorGamma.Correct(c);
   for (int q = 0; q < 3; q++) {
-    for (int i = 2; i < strip.PixelCount()-5; i = i + 3) {
+    for (int i = 2; i < strip.PixelCount() - 5; i = i + 3) {
       strip.SetPixelColor(i + q, c);  //turn every third pixel on
     }
     strip.Show();
@@ -211,7 +245,7 @@ void theaterChase(RgbColor c, uint8_t wait) {
     }
     delay(wait);
 
-    for (int i = 2; i < strip.PixelCount()-5; i = i + 3) {
+    for (int i = 2; i < strip.PixelCount() - 5; i = i + 3) {
       strip.SetPixelColor(i + q, 0);      //turn every third pixel off
     }
   }
@@ -222,7 +256,7 @@ void theaterChaseRainbow(uint8_t wait) {
   clearEdge();
   for (int j = 0; j < 256; j++) {   // cycle all 256 colors in the wheel
     for (int q = 0; q < 3; q++) {
-      for (int i = 2; i < strip.PixelCount()-5; i = i + 3) {
+      for (int i = 2; i < strip.PixelCount() - 5; i = i + 3) {
         strip.SetPixelColor(i + q, Wheel( (i + j) % 255)); //turn every third pixel on
       }
       strip.Show();
@@ -234,7 +268,7 @@ void theaterChaseRainbow(uint8_t wait) {
       }
       delay(wait);
 
-      for (int i = 2; i < strip.PixelCount()-5; i = i + 3) {
+      for (int i = 2; i < strip.PixelCount() - 5; i = i + 3) {
         strip.SetPixelColor(i + q, 0);      //turn every third pixel off
       }
     }
@@ -268,57 +302,87 @@ void digitalClockDisplay()
 
 void resetStrip() {
   stackptr = 0;
-  for(int i = 0; i<strip.PixelCount(); i++) {
+  for (int i = 0; i < strip.PixelCount(); i++) {
     strip_ptr[i] =  0;
   }
 }
 
 void resetAndBlack() {
   resetStrip();
-  for(int i = 0; i<strip.PixelCount(); i++) {
-    
-    strip.SetPixelColor(i, RgbColor(0,0,0));
+  for (int i = 0; i < strip.PixelCount(); i++) {
+
+    strip.SetPixelColor(i, RgbColor(0, 0, 0));
   }
 }
 
 void displayStrip(RgbColor colorCode) {
   colorCode = colorGamma.Correct(colorCode);
-  for(int i = 0; i<stackptr; i++) {
+  for (int i = 0; i < stackptr; i++) {
     strip.SetPixelColor(strip_ptr[i], colorCode);
   }
   strip.Show();
 }
 
-void Clock()
+void Clock(uint16_t wait)
 {
-  if (timeStatus() != timeNotSet) {
-    if (now() != prevDisplay) { //update the display only if time has changed
-      prevDisplay = now();
-      digitalClockDisplay();
-      resetAndBlack();
-      timeToStrip(hour(),minute());
-      displayStrip(RgbColor(main_color.red,main_color.green,main_color.blue));
+  RgbColor color;
+  exit_func = false;
+  wait = wait;
+  unsigned long nu;
+  while (exit_func == false)
+  {
+    nu = millis();
+    if (Rainbow_color == 0)
+    {
+      color = RgbColor(main_color.red, main_color.green, main_color.blue);
+      displayStrip(color);
+    }
+    else if ((Rainbow_color != 0) && (nu > prevRainbow + wait))
+    {
+      prevRainbow = nu;
+      color = RainbowWheel(Rainbow_count&255);
+      Rainbow_count += 1;
+      if (Rainbow_count > 255) Rainbow_count = 0;
+      displayStrip(color);
+    }
+    if (timeStatus() != timeNotSet) {
+      if (now() != prevDisplay) { //update the display only if time has changed
+        prevDisplay = now();
+        //digitalClockDisplay();
+        resetAndBlack();
+        //resetStrip();
+        timeToStrip(hour(), minute());
+        if (heartmode == H_ON)
+        {
+          W_HARTJE();
+        }
+        //displayStrip(color);
+      }
+    }
+    checkForRequests();
+    if (exit_func) {
+      exit_func = false;
+      return;
     }
   }
-
 }
 
 void fastTest() {
-  if(millis() >= waitUntilFastTest) {
+  if (millis() >= waitUntilFastTest) {
     DBG_OUTPUT_PORT.print("TESTMODE");
     waitUntilFastTest = millis();
-    if(testMinutes >= 60) {
+    if (testMinutes >= 60) {
       testMinutes = 0;
       testHours++;
     }
-    if(testHours >= 24) {
+    if (testHours >= 24) {
       testHours = 0;
     }
-    
+
     //Array empty
     resetAndBlack();
     timeToStrip(testHours, testMinutes);
-    displayStrip(RgbColor(main_color.red,main_color.green,main_color.blue));
+    displayStrip(RgbColor(main_color.red, main_color.green, main_color.blue));
     testMinutes++;
     waitUntilFastTest += oneSecondDelay;
   }
@@ -329,7 +393,7 @@ void displayHeart()
   //DBG_OUTPUT_PORT.print("Heart");
   resetAndBlack();
   W_HART();
-  displayStrip(RgbColor(main_color.red,main_color.green,main_color.blue));
+  displayStrip(RgbColor(main_color.red, main_color.green, main_color.blue));
 }
 
 

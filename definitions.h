@@ -25,6 +25,9 @@ enum MODE { HOLD, OFF, ALL, WIPE, RAINBOW, RAINBOWCYCLE, THEATERCHASE, THEATERCH
 
 MODE mode = CLOCK;   // Standard mode that is active when software starts
 
+enum HEARTMODE {H_OFF, H_ON, H_HEARTBEAT, H_RAINBOW};
+HEARTMODE heartmode = H_ON;
+
 int delay_ms = 50;          // Global variable for storing the delay between color changes --> smaller == faster
 int brightness = 75;       // Global variable for storing the brightness (255 == 100%)
 
@@ -36,6 +39,9 @@ struct ledstate           // Data structure to store a state of a single led
    uint8_t green;
    uint8_t blue;
 };
+
+uint8_t Rainbow_count = 0;
+uint8_t Rainbow_color = 0;
 
 typedef struct ledstate LEDState;   // Define the datatype LEDState
 LEDState ledstates[NUMLEDS];        // Get an array of led states to store the state of the whole strip
