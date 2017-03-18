@@ -12,6 +12,8 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 
+#include <ESP8266HTTPUpdateServer.h>
+
 #include <WiFiClient.h>
 #include <ESP8266mDNS.h>
 #include <FS.h>
@@ -34,8 +36,11 @@
 ESP8266WebServer server ( 80 );
 WebSocketsServer webSocket = WebSocketsServer(81);
 
-time_t prevDisplay = 0; // when the digital clock was displayed
+ESP8266HTTPUpdateServer httpUpdater;
 
+time_t prevDisplay = 0; // when the digital clock was displayed
+unsigned long prevRainbow = 0; // when the digital clock was displayed
+ 
 // ***************************************************************************
 // Load libraries / Instanciate Neopixel
 // ***************************************************************************
@@ -181,7 +186,8 @@ void setup() {
   ticker.detach();
   //keep LED on
   digitalWrite(BUILTIN_LED, LOW);
-
+  
+  httpUpdater.setup(&server); //start ota updater
 
   // ***************************************************************************
   // Setup: Neopixel
@@ -460,7 +466,7 @@ void loop() {
     }
   }
   if (mode == CLOCK) {
-    Clock();
+    Clock(delay_ms);
   }
   if (mode == TEST) {
     fastTest();
@@ -468,6 +474,4 @@ void loop() {
   if (mode == HEART) {
     displayHeart();
   }
-
-
 }

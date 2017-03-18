@@ -6,6 +6,9 @@ var currenttime = new Date();
 var first = 0;
 var RGB = 0;
 var Mod = 0;
+var RainbowClock = 0;
+var HeartMode = 0;
+
 connection.onopen = function(){
     connection.send('Connect ' + new Date()); 
 };
@@ -24,7 +27,21 @@ connection.onmessage = function(e){
     }
     if(e.data.startsWith('Mod:'))
     {
-      Mod = e.data.substring(4);
+      Mod = parseInt(e.data.substring(4));
+      //document.getElementById("currenttimeID").value = currenttime;
+    }
+    if(e.data.startsWith('HEARTMODE:'))
+    {
+      HeartMode = parseInt(e.data.substring(10));
+      //document.getElementById("currenttimeID").value = currenttime;
+      //console.log(HeartMode, !!HeartMode)
+      document.getElementById('heart').checked = !!HeartMode;
+    }
+    if(e.data.startsWith('RAINBOWMODE:'))
+    {
+      RainbowClock = parseInt(e.data.substring(12));
+      document.getElementById('rainbowclock').checked = !!RainbowClock;
+      
       //document.getElementById("currenttimeID").value = currenttime;
     }
     if(e.data.startsWith('RGB:'))
@@ -78,16 +95,37 @@ function FormFunc() {
   for( var i=0; i<document.myForm.elements.length; i++ )
   {
    var fieldName = document.myForm.elements[i].name;
-   var fieldValue = document.myForm.elements[i].value;
+   //var fieldValue = document.myForm.elements[i].value;
+   var fieldValue = 0;
+   if (document.myForm.elements[i].checked == true)
+   {
+            fieldValue = 1;
+   }
+   if (fieldName == "heart")
+   {
+     if(fieldValue != HeartMode)
+     {
+       HeartMode = fieldValue;
+       var strg = HeartMode.toString();
+       strg = 'H=' + strg;
+       connection.send(strg);
+     }
+   }
+   else if (fieldName == "rainbowclock")
+   {
+     if(fieldValue != RainbowClock)
+     {
+      RainbowClock = fieldValue;
+      var strg = RainbowClock.toString();
+       strg = 'R=' + strg;
+       connection.send(strg);
+     }
+   }
 
-   // use the fields, put them in a array, etc.
-
-   // or, add them to a key-value pair strings, 
-   // as in regular POST
-
-   params += fieldName + '=' + fieldValue + '&';
+   //params += fieldName + '=' + fieldValue + '&';
+   //console.log(parseInt(fieldValue));
   }
-    console.log(params);
+    //console.log(params);
     //document.getElementById("myForm").submit();
 }
 function TimeFormFunc() {
@@ -246,7 +284,8 @@ Brightness: <input id="bri" type="range" min="0" max="100" step="1" onchange="se
 <br/>
 <form id="myFormId" name="myForm">
   Birthday mode: <input type="checkbox" name="birthdaymod"><br>
-  Show Heart:   <input type="checkbox"  name="heart"><br><br>
+  Show Heart:   <input type="checkbox"  name="heart" id="heart"><br>
+  Rainbow clock: <input type="checkbox"  name="rainbowclock" id="rainbowclock"><br><br>
   <input type="button" onclick="FormFunc()" name="SubBtn" value="Submit form">
 </form>
 
