@@ -21,7 +21,7 @@ extern "C" {
 #define DBG_OUTPUT_PORT Serial  // Set debug output port
 
 // List of all color modes
-enum MODE { HOLD, OFF, ALL, WIPE, RAINBOW, RAINBOWCYCLE, THEATERCHASE, THEATERCHASERAINBOW, CLOCK, TEST, HEART };
+enum MODE { HOLD, OFF, ALL, WIPE, RAINBOW, RAINBOWCYCLE, THEATERCHASE, THEATERCHASERAINBOW, CLOCK, TEST, PARTY };
 
 MODE mode = CLOCK;   // Standard mode that is active when software starts
 

@@ -1,5 +1,4 @@
 #include "led_layout.h"
-void W_HEART();
 
 void pushToStrip(uint8_t Led)
 {
@@ -10,66 +9,32 @@ void pushToStrip(uint8_t Led)
 ///////////////////////
 //PUSH WORD HELPER
 ///////////////////////
-void W_HART()  {
-  pushToStrip(L7);
-  pushToStrip(L17);
-  pushToStrip(L19);
-  pushToStrip(L31);
-  pushToStrip(L27);
-  pushToStrip(L37);
-  pushToStrip(L43);
-  pushToStrip(L47);
-  pushToStrip(L55);
-  pushToStrip(L57);
-  pushToStrip(L78);
-  pushToStrip(L79);
-  pushToStrip(L100);
-  pushToStrip(L102);
-  pushToStrip(L120);
-  pushToStrip(L119);
-  pushToStrip(L105);
-  pushToStrip(L95);
-  pushToStrip(L107);
-  pushToStrip(L115);
-  pushToStrip(L114);
-  pushToStrip(L110);
-  pushToStrip(L90);
-  pushToStrip(L89);
-  pushToStrip(L68);
-  pushToStrip(L67);
-}
-/*
-void W_STER()  {
-  pushToStrip(L9);
-  pushToStrip(L10);
-  pushToStrip(L30);
-  pushToStrip(L49);
-  pushToStrip(L50);
-}*/
-
-void W_HARTJE()  {
+void W_LOGO()  {
   pushToStrip(L2);
 }
 
-void W_PROFICIAT()  {
-  pushToStrip(L96);
-  pushToStrip(L83);
-  pushToStrip(L74);
-  pushToStrip(L61);
-  pushToStrip(L52);
-  pushToStrip(L38);
-  pushToStrip(L30);
-  pushToStrip(L17);
-  pushToStrip(L8);
+
+void W_FEEST()  {
+  pushToStrip(L95);
+  pushToStrip(L84);
+  pushToStrip(L73);
+  pushToStrip(L62);
+  pushToStrip(L51);
 }
 
-void W_LAURIE()  {
-  pushToStrip(L68);
-  pushToStrip(L67);
-  pushToStrip(L46);
-  pushToStrip(L45);
-  pushToStrip(L24);
-  pushToStrip(L23);
+void W_PARTY()  {
+  pushToStrip(L57);
+  pushToStrip(L58);
+  pushToStrip(L59);
+  pushToStrip(L60);
+  pushToStrip(L61);
+}
+
+void W_MODE()  {
+  pushToStrip(L55);
+  pushToStrip(L54);
+  pushToStrip(L53);
+  pushToStrip(L52);
 }
 
 void M_HETIS()  {
@@ -79,6 +44,7 @@ void M_HETIS()  {
   pushToStrip(L118);
   pushToStrip(L117);
 }
+
 void M_VIJF() {
 pushToStrip(L115);
 pushToStrip(L114);
@@ -87,10 +53,10 @@ pushToStrip(L112);
 }
 
 void M_OVER() {
-pushToStrip(L100);
 pushToStrip(L99);
 pushToStrip(L98);
 pushToStrip(L97);
+pushToStrip(L96);
 }
 
 void M_TIEN() {
@@ -145,88 +111,88 @@ pushToStrip(L126);
 }
 
 void H_EEN() {
-pushToStrip(L56);
-pushToStrip(L55);
-pushToStrip(L54);
-}
-
-void H_TWEE() {
-pushToStrip(L28);
 pushToStrip(L27);
 pushToStrip(L26);
 pushToStrip(L25);
 }
 
-void H_DRIE() {
-pushToStrip(L34);
-pushToStrip(L33);
-pushToStrip(L32);
-pushToStrip(L31);
-}
-
-void H_VIER() {
-pushToStrip(L51);
-pushToStrip(L50);
-pushToStrip(L49);
-pushToStrip(L48);
-}
-
-void H_VIJF() {
+void H_TWEE() {
 pushToStrip(L63);
 pushToStrip(L64);
 pushToStrip(L65);
 pushToStrip(L66);
 }
 
-void H_ZES() {
-pushToStrip(L77);
-pushToStrip(L76);
-pushToStrip(L75);
+void H_DRIE() {
+pushToStrip(L19);
+pushToStrip(L20);
+pushToStrip(L21);
+pushToStrip(L22);
 }
 
-void H_ZEVEN() {
-pushToStrip(L40);
-pushToStrip(L41);
-pushToStrip(L42);
-pushToStrip(L43);
-pushToStrip(L44);
-}
-
-void H_ACHT() {
-pushToStrip(L35);
-pushToStrip(L36);
-pushToStrip(L37);
-pushToStrip(L38);
-}
-
-void H_NEGEN() {
-pushToStrip(L73);
-pushToStrip(L72);
-pushToStrip(L71);
-pushToStrip(L70);
-pushToStrip(L69);
-}
-
-void H_TIEN() {
-pushToStrip(L12);
-pushToStrip(L11);
+void H_VIER() {
 pushToStrip(L10);
 pushToStrip(L9);
+pushToStrip(L8);
+pushToStrip(L7);
 }
 
-void H_ELF() {
-pushToStrip(L85);
-pushToStrip(L86);
-pushToStrip(L87);
-}
-
-void H_TWAALF() {
+void H_VIJF() {
 pushToStrip(L14);
 pushToStrip(L15);
 pushToStrip(L16);
 pushToStrip(L17);
-pushToStrip(L18);
-pushToStrip(L19);
+}
+
+void H_ZES() {
+pushToStrip(L70);
+pushToStrip(L69);
+pushToStrip(L68);
+}
+
+void H_ZEVEN() {
+pushToStrip(L35);
+pushToStrip(L36);
+pushToStrip(L37);
+pushToStrip(L38);
+pushToStrip(L39);
+}
+
+void H_ACHT() {
+pushToStrip(L32);
+pushToStrip(L31);
+pushToStrip(L30);
+pushToStrip(L29);
+}
+
+void H_NEGEN() {
+pushToStrip(L76);
+pushToStrip(L75);
+pushToStrip(L74);
+pushToStrip(L73);
+pushToStrip(L62);
+}
+
+void H_TIEN() {
+pushToStrip(L42);
+pushToStrip(L43);
+pushToStrip(L44);
+pushToStrip(L45);
+}
+
+void H_ELF() {
+pushToStrip(L84);
+pushToStrip(L85);
+pushToStrip(L86);
+}
+
+void H_TWAALF() {
+pushToStrip(L51);
+pushToStrip(L50);
+pushToStrip(L49);
+pushToStrip(L48);
+pushToStrip(L47);
+pushToStrip(L46);
 }
 
 ///////////////////////
@@ -352,4 +318,3 @@ void timeToStrip(uint8_t hours,uint8_t minutes)
     M_UUR();
   }
 }
-

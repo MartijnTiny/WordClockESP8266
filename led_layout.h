@@ -1,6 +1,6 @@
 #define L0   0    //Back-Led for status (3v3)
 #define L1   1    //Bottom Middle Led
-#define L2   2    //Hartje
+#define L2   2    //Logo
 #define L126 126  //minuten
 #define L125 125  //minuten
 #define L124 124  //minuten
@@ -125,5 +125,3 @@
 #define L5   5
 #define L4   4
 #define L3   3 
-
-

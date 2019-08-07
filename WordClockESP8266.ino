@@ -2,6 +2,7 @@
 
 #include "definitions.h"
 
+#define BUILTIN_LED 16
 // ***************************************************************************
 // Load libraries for: WebServer / WiFiManager / WebSockets https://github.com/toblum/McLighting
 // ***************************************************************************
@@ -470,8 +471,5 @@ void loop() {
   }
   if (mode == TEST) {
     fastTest();
-  }
-  if (mode == HEART) {
-    displayHeart();
   }
 }
